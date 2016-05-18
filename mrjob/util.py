@@ -33,6 +33,7 @@ from copy import deepcopy
 from datetime import timedelta
 from distutils.spawn import find_executable
 from logging import getLogger
+from parse_hdf5 import parse_file
 
 try:
     import bz2
@@ -389,8 +390,14 @@ def read_file(path, fileobj=None, yields_lines=True, cleanup=None):
             f = open(path, 'rb')
         else:
             f = fileobj
+            
+        ### MODIFIED CODE FOR SONGS PROJECT
+        if path.endswith('.h5'):
+            yield parse_file(path)
+            return
 
-        if path.endswith('.gz'):
+        ####
+        elif path.endswith('.gz'):
             lines = to_lines(gunzip_stream(f))
         elif path.endswith('.bz2'):
             if bz2 is None:
